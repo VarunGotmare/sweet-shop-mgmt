@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const prisma = require('./lib/prisma');
+const {prisma} = require('./lib/prisma');
 
 const authRoutes = require('./routes/auth.routes');
 

@@ -10,4 +10,4 @@ const adapter = new PrismaPg(pool);
 
 const prisma = new PrismaClient({ adapter });
 
-module.exports = prisma;
+module.exports = { prisma, pool };

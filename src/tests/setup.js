@@ -1,5 +1,5 @@
 require('dotenv').config();
-const prisma = require('../lib/prisma');
+const {prisma,pool} = require('../lib/prisma');
 
 beforeEach(async () => {
     //clear users before testing
@@ -8,4 +8,5 @@ beforeEach(async () => {
 
 afterAll(async () => {
     await prisma.$disconnect();
+    await pool.end();
 });

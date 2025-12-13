@@ -1,5 +1,6 @@
-const prisma = require('../lib/prisma');
+const {prisma} = require('../lib/prisma');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 exports.register = async ({ name, email, password }) => {
     const existingUser = await prisma.user.findUnique({
@@ -52,6 +53,12 @@ exports.login = async ({ email, password }) => {
         error.statusCode = 401;
         throw error;
     }
+    const token = jwt.sign(
+        { userId: user.id, email: user.email, role: user.role },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+    );
+    
     const { password: _, ...safeUser } = user;
-    return safeUser;
+    return { token, user: safeUser};
 };
