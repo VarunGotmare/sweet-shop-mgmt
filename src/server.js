@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const prisma = require('./lib/prisma');
 
+const authRoutes = require('./routes/auth.routes');
+
 const app = express();
 
 app.use(cors());
@@ -11,6 +13,9 @@ app.use(express.json());
 app.get('/health', async (req, res) => {
   return res.status(200).json({ ok: true });
 });
+
+//my api routes
+app.use('/api/auth', authRoutes);
 
 
 module.exports = app;
