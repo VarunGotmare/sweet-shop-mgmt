@@ -36,3 +36,22 @@ exports.register = async ({ name, email, password }) => {
     const { password: _, ...safeUser } = user;
     return safeUser;
 };
+
+exports.login = async ({ email, password }) => {
+    const user = await prisma.user.findUnique({
+        where: { email },
+    });
+    if (!user) {
+        const error = new Error('Invalid email or password');
+        error.statusCode = 401;
+        throw error;
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        const error = new Error('Invalid email or password');
+        error.statusCode = 401;
+        throw error;
+    }
+    const { password: _, ...safeUser } = user;
+    return safeUser;
+};

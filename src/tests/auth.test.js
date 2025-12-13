@@ -18,6 +18,16 @@ describe('Auth Test', () => {
     });
 
     it('should login an existing user', async () => {
+
+        // first register the user
+        await request(app)
+            .post('/api/auth/register')
+            .send({
+                name: 'Test User',
+                email: 'test@example.com',
+                password: 'password123',
+            });
+
         // login w the same creds as above
         const res = await request(app)
             .post('/api/auth/login')
@@ -26,6 +36,7 @@ describe('Auth Test', () => {
                 password: 'password123',
             });
 
+        //assertions (sounds cool)
         expect(res.statusCode).toBe(200);
         expect(res.body).toHaveProperty('token');
         expect(res.body).toHaveProperty('user');
