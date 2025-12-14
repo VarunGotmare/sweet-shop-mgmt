@@ -4,14 +4,14 @@ const {requireAdmin} = require('../middleware/admin.middleware');
 const {
   createSweet,
   getAllSweets,
+  purchaseSweet,
 } = require('../controllers/sweets.controller');
 
 const router = express.Router();
 
 
 router.post('/', requireAuth, requireAdmin, createSweet);
-
-
 router.get('/', requireAuth, getAllSweets);
+router.post('/:id/purchase', requireAuth, purchaseSweet);
 
 module.exports = router;

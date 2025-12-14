@@ -21,3 +21,15 @@ exports.getAllSweets = async (req, res) => {
             .json({ message: 'Server error' });
     }
 };
+
+exports.purchaseSweet = async (req, res) => {
+    try{
+        const result = await sweetsService.purchaseSweet(
+            req.params.id,
+            req.body.quantity   
+        );
+        return res.status(200).json(result);
+    }catch (err){
+        return res.status(err.statusCode || 500).json({ message: err.message || 'Server error' });      
+    }
+}

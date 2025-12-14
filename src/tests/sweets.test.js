@@ -41,4 +41,69 @@ describe('Sweets: Create', () => {
         expect(res.body.quantity).toBe(100);
     });
 
+
+    it('should allow a user to purchase a sweet and reduce quantity', async () => {
+        //register normal user
+        await request(app)
+            .post('/api/auth/register')
+            .send({
+                name: 'User',
+                email: 'user@test.com',
+                password: 'password123',
+            });
+
+        //login user
+        const loginRes = await request(app)
+            .post('/api/auth/login')
+            .send({
+                email: 'user@test.com',
+                password: 'password123',
+            });
+
+        const token = loginRes.body.token;
+
+        //register & login admin (to create sweet)
+        await request(app)
+            .post('/api/auth/register')
+            .send({
+                name: 'Admin',
+                email: process.env.ADMIN_EMAILS.split(',')[0],
+                password: 'password123',
+            });
+
+        const adminLogin = await request(app)
+            .post('/api/auth/login')
+            .send({
+                email: process.env.ADMIN_EMAILS.split(',')[0],
+                password: 'password123',
+            });
+
+        const adminToken = adminLogin.body.token;
+
+        //admin creates sweet
+        const sweetRes = await request(app)
+            .post('/api/sweets')
+            .set('Authorization', `Bearer ${adminToken}`)
+            .send({
+                name: 'Ladoo',
+                category: 'Indian',
+                price: 10,
+                quantity: 20,
+            });
+
+        const sweetId = sweetRes.body.id;
+
+        //user purchases sweet
+        const res = await request(app)
+            .post(`/api/sweets/${sweetId}/purchase`)
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                quantity: 5,
+            });
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.remainingQuantity).toBe(15);
+    });
+
+
 });
