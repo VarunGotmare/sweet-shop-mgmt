@@ -7,6 +7,10 @@ import { useNavigate } from "react-router-dom";
 import SweetsTable from "../components/SweetTable";
 import SweetsSearch from "../components/SweetSearch";
 
+import PurchaseModal from "../components/PurchaseModal";
+import { purchaseSweet } from "../api/sweets.api";
+
+
 const LIMIT = 10;
 
 export default function Home() {
@@ -16,6 +20,8 @@ export default function Home() {
 
   const [searchName, setSearchName] = useState("");
   const [searchCategory, setSearchCategory] = useState("");
+
+  const [selectedSweet, setSelectedSweet] = useState<Sweet | null>(null);
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -61,6 +67,22 @@ export default function Home() {
     logout();
     navigate("/login");
   };
+
+  const handleConfirmPurchase = async (quantity: number) => {
+    if (!selectedSweet) return;
+
+    const res = await purchaseSweet(selectedSweet.id, quantity);
+
+
+    setSweets((prev) =>
+      prev.map((s) =>
+        s.id === selectedSweet.id
+          ? { ...s, quantity: res.remainingQuantity }
+          : s
+      )
+    );
+  };
+
 
   return (
     <div className="min-h-screen bg-zinc-950 p-6 text-white">
@@ -118,9 +140,18 @@ export default function Home() {
             page={page}
             totalPages={totalPages}
             onPageChange={setPage}
+            onPurchaseClick={setSelectedSweet}
           />
         </>
       )}
+      {selectedSweet && (
+        <PurchaseModal
+          sweet={selectedSweet}
+          onClose={() => setSelectedSweet(null)}
+          onConfirm={handleConfirmPurchase}
+        />
+      )}
+
     </div>
   );
 }

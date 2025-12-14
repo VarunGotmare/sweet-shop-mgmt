@@ -5,6 +5,7 @@ type Props = {
   page: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  onPurchaseClick: (sweet: Sweet) => void; 
 };
 
 export default function SweetsTable({
@@ -12,6 +13,7 @@ export default function SweetsTable({
   page,
   totalPages,
   onPageChange,
+  onPurchaseClick,
 }: Props) {
   return (
     <div className="space-y-6">
@@ -83,6 +85,7 @@ export default function SweetsTable({
             <div className="mt-3 md:mt-0 md:text-right">
               <button
                 disabled={sweet.quantity === 0}
+                onClick={() => onPurchaseClick(sweet)}
                 className="w-full md:w-auto rounded bg-pink-600 px-3 py-2 text-sm text-white hover:bg-pink-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Purchase
