@@ -21,10 +21,8 @@ export default function Register() {
     try {
       const res = await registerUser({ name, email, password });
 
-      // Auto-login after successful registration
       login(res.token, res.user);
 
-      // Redirect based on role
       if (res.user.role === "ADMIN") {
         navigate("/admin");
       } else {
@@ -38,60 +36,72 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-950">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm space-y-4 rounded-xl bg-zinc-900 p-6"
+        className="w-full max-w-sm space-y-5 rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
       >
-        <h1 className="text-2xl font-bold text-center text-pink-500">
-          Register
-        </h1>
+        <div className="text-center">
+          <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
+            Create an account
+          </h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Join the Sweet Shop platform
+          </p>
+        </div>
 
-        {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+        {error && (
+          <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-600 text-center">
+            {error}
+          </p>
+        )}
 
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          className="w-full rounded bg-zinc-800 px-3 py-2 text-white outline-none focus:ring-2 focus:ring-pink-500"
-        />
+        <div className="space-y-3">
+          <input
+            type="text"
+            placeholder="Full name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          />
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="w-full rounded bg-zinc-800 px-3 py-2 text-white outline-none focus:ring-2 focus:ring-pink-500"
-        />
+          <input
+            type="email"
+            placeholder="Email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="w-full rounded bg-zinc-800 px-3 py-2 text-white outline-none focus:ring-2 focus:ring-pink-500"
-        />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          />
+        </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded bg-pink-600 py-2 font-semibold text-white hover:bg-pink-700 disabled:opacity-50"
+          className="w-full rounded-md bg-indigo-600 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50 transition"
         >
-          {loading ? "Creating account..." : "Register"}
+          {loading ? "Creating account..." : "Create account"}
         </button>
 
-        <p className="text-sm text-center text-zinc-400">
+        <p className="text-sm text-center text-gray-600">
           Already have an account?{" "}
-          <span
+          <button
+            type="button"
             onClick={() => navigate("/login")}
-            className="cursor-pointer text-pink-500 hover:underline"
+            className="font-medium text-indigo-600 hover:underline"
           >
-            Login
-          </span>
+            Sign in
+          </button>
         </p>
       </form>
     </div>

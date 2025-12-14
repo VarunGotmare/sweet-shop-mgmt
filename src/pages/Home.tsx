@@ -42,11 +42,11 @@ export default function Home() {
 
       const res = hasSearch
         ? await searchSweets({
-            name: searchName || undefined,
-            category: searchCategory || undefined,
-            page: pageNumber,
-            limit: LIMIT,
-          })
+          name: searchName || undefined,
+          category: searchCategory || undefined,
+          page: pageNumber,
+          limit: LIMIT,
+        })
         : await getAllSweets(pageNumber, LIMIT);
 
       setSweets(res.data);
@@ -101,76 +101,85 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 p-6 text-white">
-      {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-pink-500">
-          Available Sweets
-        </h1>
+    <div className="min-h-screen bg-gray-50 px-6 py-6 text-gray-900">
+      <div className="mx-auto max-w-7xl space-y-6">
+        {/* Header */}
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Available Sweets
+          </h1>
 
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-zinc-400">{user?.name}</span>
-          <button
-            onClick={handleLogout}
-            className="rounded border border-red-500 px-4 py-2 text-sm font-semibold text-red-400 hover:bg-red-500/10 transition"
-          >
-            Logout
-          </button>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-500">
+              {user?.name}
+            </span>
+            <button
+              onClick={handleLogout}
+              className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
+            >
+              Logout
+            </button>
+          </div>
         </div>
+
+        {/* Search */}
+        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+          <SweetsSearch
+            name={searchName}
+            category={searchCategory}
+            onNameChange={setSearchName}
+            onCategoryChange={setSearchCategory}
+            onClear={() => {
+              setSearchName("");
+              setSearchCategory("");
+            }}
+          />
+        </div>
+
+        {/* Content */}
+        {loading && (
+          <div className="flex h-[60vh] items-center justify-center">
+            <p className="text-gray-500">Loading sweets...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="flex h-[60vh] items-center justify-center">
+            <p className="text-red-600">{error}</p>
+          </div>
+        )}
+
+        {!loading && !error && sweets.length === 0 && (
+          <div className="flex h-[60vh] items-center justify-center">
+            <p className="text-gray-500">No sweets available 🍬</p>
+          </div>
+        )}
+
+        {!loading && !error && sweets.length > 0 && (
+          <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+            <SweetsTable
+              sweets={sweets}
+              page={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+              onPurchaseClick={setSelectedSweet}
+            />
+          </div>
+        )}
+
+        {/* Purchase Modal */}
+        {selectedSweet && (
+          <QuantityModal
+            title={`Purchase ${selectedSweet.name}`}
+            description={`Available stock: ${selectedSweet.quantity}`}
+            confirmText="Purchase"
+            maxQuantity={selectedSweet.quantity}
+            onClose={() => setSelectedSweet(null)}
+            onConfirm={handleConfirmPurchase}
+          />
+        )}
       </div>
-
-      {/* Search */}
-      <SweetsSearch
-        name={searchName}
-        category={searchCategory}
-        onNameChange={setSearchName}
-        onCategoryChange={setSearchCategory}
-        onClear={() => {
-          setSearchName("");
-          setSearchCategory("");
-        }}
-      />
-
-      {/* Content */}
-      {loading && (
-        <div className="flex h-[60vh] items-center justify-center">
-          <p className="text-lg text-zinc-400">Loading sweets...</p>
-        </div>
-      )}
-
-      {error && (
-        <div className="flex h-[60vh] items-center justify-center">
-          <p className="text-red-500">{error}</p>
-        </div>
-      )}
-
-      {!loading && !error && sweets.length === 0 && (
-        <div className="flex h-[60vh] items-center justify-center">
-          <p className="text-zinc-400">No sweets available 🍬</p>
-        </div>
-      )}
-
-      {!loading && !error && sweets.length > 0 && (
-        <SweetsTable
-          sweets={sweets}
-          page={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-          onPurchaseClick={setSelectedSweet}
-        />
-      )}
-
-      {/* Purchase Modal */}
-      {selectedSweet && (
-        <QuantityModal
-          title={`Purchase ${selectedSweet.name}`}
-          description={`Available stock: ${selectedSweet.quantity}`}
-          confirmText="Purchase"
-          maxQuantity={selectedSweet.quantity}
-          onClose={() => setSelectedSweet(null)}
-          onConfirm={handleConfirmPurchase}
-        />
-      )}
     </div>
   );
+
 }

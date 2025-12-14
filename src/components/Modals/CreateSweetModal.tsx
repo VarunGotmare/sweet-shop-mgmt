@@ -1,8 +1,6 @@
 import { useState } from "react";
-import type { Sweet } from "../../api/sweets.api";
 
 type Props = {
-    sweet: Sweet;
     onClose: () => void;
     onConfirm: (data: {
         name: string;
@@ -12,15 +10,14 @@ type Props = {
     }) => Promise<void>;
 };
 
-export default function EditSweetModal({
-    sweet,
+export default function CreateSweetModal({
     onClose,
     onConfirm,
 }: Props) {
-    const [name, setName] = useState(sweet.name);
-    const [category, setCategory] = useState(sweet.category);
-    const [price, setPrice] = useState(sweet.price);
-    const [quantity, setQuantity] = useState(sweet.quantity);
+    const [name, setName] = useState("");
+    const [category, setCategory] = useState("");
+    const [price, setPrice] = useState("");
+    const [quantity, setQuantity] = useState(0);
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -28,6 +25,11 @@ export default function EditSweetModal({
     const handleConfirm = async () => {
         if (!name.trim() || !category.trim()) {
             setError("Name and category are required");
+            return;
+        }
+
+        if (Number(price) <= 0 || quantity < 0) {
+            setError("Invalid price or quantity");
             return;
         }
 
@@ -45,7 +47,7 @@ export default function EditSweetModal({
             setError(
                 err?.response?.data?.message ||
                 err?.message ||
-                "Update failed"
+                "Create failed"
             );
         } finally {
             setLoading(false);
@@ -57,7 +59,7 @@ export default function EditSweetModal({
             <div className="w-full max-w-md rounded-xl bg-zinc-900 p-6 shadow-xl">
                 {/* Header */}
                 <h2 className="text-lg font-semibold text-white">
-                    Edit Sweet
+                    Add New Sweet
                 </h2>
 
                 {/* Form */}
@@ -65,11 +67,11 @@ export default function EditSweetModal({
                     <input
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        placeholder="Name"
+                        placeholder="Sweet name"
                         className="
-                w-full rounded-md border border-zinc-700 bg-zinc-800
-                px-3 py-2 text-sm text-white placeholder-zinc-400
-                focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500
+              w-full rounded-md border border-zinc-700 bg-zinc-800
+              px-3 py-2 text-sm text-white placeholder-zinc-400
+              focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500
             "
                     />
 
@@ -78,9 +80,9 @@ export default function EditSweetModal({
                         onChange={(e) => setCategory(e.target.value)}
                         placeholder="Category"
                         className="
-                w-full rounded-md border border-zinc-700 bg-zinc-800
-                px-3 py-2 text-sm text-white placeholder-zinc-400
-                focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500
+              w-full rounded-md border border-zinc-700 bg-zinc-800
+              px-3 py-2 text-sm text-white placeholder-zinc-400
+              focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500
             "
                     />
 
@@ -90,9 +92,9 @@ export default function EditSweetModal({
                         onChange={(e) => setPrice(e.target.value)}
                         placeholder="Price"
                         className="
-                w-full rounded-md border border-zinc-700 bg-zinc-800
-                px-3 py-2 text-sm text-white placeholder-zinc-400
-                focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500
+              w-full rounded-md border border-zinc-700 bg-zinc-800
+              px-3 py-2 text-sm text-white placeholder-zinc-400
+              focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500
             "
                     />
 
@@ -100,11 +102,11 @@ export default function EditSweetModal({
                         type="number"
                         value={quantity}
                         onChange={(e) => setQuantity(Number(e.target.value))}
-                        placeholder="Quantity"
+                        placeholder="Initial quantity"
                         className="
-                w-full rounded-md border border-zinc-700 bg-zinc-800
-                px-3 py-2 text-sm text-white placeholder-zinc-400
-                focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500
+              w-full rounded-md border border-zinc-700 bg-zinc-800
+              px-3 py-2 text-sm text-white placeholder-zinc-400
+              focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500
             "
                     />
                 </div>
@@ -131,7 +133,7 @@ export default function EditSweetModal({
                         disabled={loading}
                         className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
                     >
-                        {loading ? "Saving..." : "Save changes"}
+                        {loading ? "Creating..." : "Create sweet"}
                     </button>
                 </div>
             </div>

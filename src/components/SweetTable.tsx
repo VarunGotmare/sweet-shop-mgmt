@@ -13,7 +13,6 @@ type Props = {
   onDeleteClick?: (sweet: Sweet) => void;
 };
 
-
 export default function SweetsTable({
   sweets,
   page,
@@ -25,16 +24,16 @@ export default function SweetsTable({
   onDeleteClick,
 }: Props) {
   return (
-    <div className="space-y-6">
-      {/* List */}
-      <div className="overflow-hidden rounded-lg border border-zinc-800">
-        {/* Header (desktop only) */}
-        <div className="hidden md:grid grid-cols-5 gap-4 bg-zinc-900 px-4 py-3 text-sm font-semibold text-zinc-400">
+    <div className="space-y-4">
+      {/* Table */}
+      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
+        {/* Header (desktop) */}
+        <div className="hidden md:grid grid-cols-5 gap-4 border-b border-gray-200 bg-gray-50 px-4 py-3 text-sm font-medium text-gray-600">
           <span>Name</span>
           <span>Category</span>
           <span>Price</span>
           <span>Stock</span>
-          <span className="text-right">Action</span>
+          <span className="text-right">Actions</span>
         </div>
 
         {/* Rows */}
@@ -42,60 +41,61 @@ export default function SweetsTable({
           <div
             key={sweet.id}
             className="
-              border-t border-zinc-800 px-4 py-4
-              hover:bg-zinc-900/60 transition
-              md:grid md:grid-cols-5 md:gap-4 md:items-center
+              border-b border-gray-100 px-4 py-4
+              transition hover:bg-gray-50
+              md:grid md:grid-cols-5 md:items-center md:gap-4
             "
           >
             {/* Name */}
-            <div className="font-medium text-white md:col-span-1">
+            <div className="font-medium text-gray-900">
               {sweet.name}
             </div>
 
             {/* Mobile details */}
-            <div className="mt-1 space-y-1 text-sm text-zinc-400 md:hidden">
+            <div className="mt-1 space-y-1 text-sm text-gray-500 md:hidden">
               <div>Category: {sweet.category}</div>
-              <div className="text-pink-400">
-                Price: ₹ {sweet.price}
-              </div>
-              <div
-                className={
-                  sweet.quantity > 0
-                    ? "text-green-400"
-                    : "text-red-400"
-                }
-              >
-                Stock: {sweet.quantity}
+              <div>Price: ₹ {sweet.price}</div>
+              <div>
+                Stock:{" "}
+                <span
+                  className={
+                    sweet.quantity > 0
+                      ? "text-green-600"
+                      : "text-red-600"
+                  }
+                >
+                  {sweet.quantity}
+                </span>
               </div>
             </div>
 
             {/* Desktop category */}
-            <div className="hidden md:block text-zinc-400">
+            <div className="hidden md:block text-gray-600">
               {sweet.category}
             </div>
 
             {/* Desktop price */}
-            <div className="hidden md:block text-pink-400">
+            <div className="hidden md:block text-gray-900">
               ₹ {sweet.price}
             </div>
 
             {/* Desktop stock */}
             <div
               className={`hidden md:block ${sweet.quantity > 0
-                  ? "text-green-400"
-                  : "text-red-400"
+                  ? "text-green-600"
+                  : "text-red-600"
                 }`}
             >
               {sweet.quantity}
             </div>
 
-            {/* Action */}
-            <div className="mt-3 md:mt-0 md:text-right flex gap-2 justify-end flex-wrap">
+            {/* Actions */}
+            <div className="mt-3 flex flex-wrap justify-end gap-2 md:mt-0">
               {onPurchaseClick && (
                 <button
                   disabled={sweet.quantity === 0}
                   onClick={() => onPurchaseClick(sweet)}
-                  className="rounded bg-pink-600 px-3 py-2 text-sm text-white hover:bg-pink-700 disabled:opacity-50"
+                  className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
                 >
                   Purchase
                 </button>
@@ -104,7 +104,7 @@ export default function SweetsTable({
               {onRestockClick && (
                 <button
                   onClick={() => onRestockClick(sweet)}
-                  className="rounded bg-blue-600 px-3 py-2 text-sm text-white hover:bg-blue-700"
+                  className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
                 >
                   Restock
                 </button>
@@ -113,7 +113,7 @@ export default function SweetsTable({
               {onEditClick && (
                 <button
                   onClick={() => onEditClick(sweet)}
-                  className="rounded bg-yellow-600 px-3 py-2 text-sm text-white hover:bg-yellow-700"
+                  className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
                 >
                   Edit
                 </button>
@@ -122,13 +122,12 @@ export default function SweetsTable({
               {onDeleteClick && (
                 <button
                   onClick={() => onDeleteClick(sweet)}
-                  className="rounded bg-red-600 px-3 py-2 text-sm text-white hover:bg-red-700"
+                  className="rounded-md border border-red-300 bg-white px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50"
                 >
                   Delete
                 </button>
               )}
             </div>
-
           </div>
         ))}
       </div>
@@ -139,19 +138,19 @@ export default function SweetsTable({
           <button
             disabled={page === 1}
             onClick={() => onPageChange(page - 1)}
-            className="rounded border border-zinc-700 px-4 py-2 text-sm disabled:opacity-50"
+            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50"
           >
             Prev
           </button>
 
-          <span className="text-sm text-zinc-400">
+          <span className="text-sm text-gray-500">
             Page {page} of {totalPages}
           </span>
 
           <button
             disabled={page === totalPages}
             onClick={() => onPageChange(page + 1)}
-            className="rounded border border-zinc-700 px-4 py-2 text-sm disabled:opacity-50"
+            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50"
           >
             Next
           </button>

@@ -9,6 +9,10 @@ import ConfirmModal from "../../components/Modals/ConfirmModal";
 import EditSweetModal from "../../components/Modals/EditSweetModal";
 import SweetsTable from "../../components/SweetTable";
 
+import { createSweet } from "../../api/sweets.api";
+import CreateSweetModal from "../../components/Modals/CreateSweetModal";
+
+
 const LIMIT = 10;
 
 export default function AdminSweets() {
@@ -19,6 +23,9 @@ export default function AdminSweets() {
     const [sweetToRestock, setSweetToRestock] = useState<Sweet | null>(null);
     const [sweetToDelete, setSweetToDelete] = useState<Sweet | null>(null);
     const [sweetToEdit, setSweetToEdit] = useState<Sweet | null>(null);
+
+    const [showCreateModal, setShowCreateModal] = useState(false);
+
 
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -72,6 +79,33 @@ export default function AdminSweets() {
             );
         }
     };
+
+    const handleCreateSweet = async (data: {
+        name: string;
+        category: string;
+        price: string | number;
+        quantity: number;
+    }) => {
+        const toastId = toast.loading("Creating sweet...");
+
+        try {
+            const created = await createSweet(data);
+
+            //sort
+            setSweets((prev) => [created, ...prev]);
+
+            setPage(1);
+
+            toast.success("Sweet created", { id: toastId });
+            setShowCreateModal(false);
+        } catch (err: any) {
+            toast.error(
+                err?.response?.data?.message || "Create failed",
+                { id: toastId }
+            );
+        }
+    };
+
 
     /* ---------------- DELETE ---------------- */
 
@@ -133,7 +167,7 @@ export default function AdminSweets() {
     if (loading) {
         return (
             <div className="flex h-[60vh] items-center justify-center">
-                <p className="text-zinc-400">Loading sweets...</p>
+                <p className="text-gray-500">Loading sweets...</p>
             </div>
         );
     }
@@ -141,7 +175,7 @@ export default function AdminSweets() {
     if (error) {
         return (
             <div className="flex h-[60vh] items-center justify-center">
-                <p className="text-red-500">{error}</p>
+                <p className="text-red-600">{error}</p>
             </div>
         );
     }
@@ -149,23 +183,41 @@ export default function AdminSweets() {
     if (sweets.length === 0) {
         return (
             <div className="flex h-[60vh] items-center justify-center">
-                <p className="text-zinc-400">No sweets found 🍬</p>
+                <p className="text-gray-500">No sweets found 🍬</p>
             </div>
         );
     }
 
     return (
-        <>
-            <SweetsTable
-                sweets={sweets}
-                page={page}
-                totalPages={totalPages}
-                onPageChange={setPage}
-                onRestockClick={setSweetToRestock}
-                onDeleteClick={setSweetToDelete}
-                onEditClick={setSweetToEdit}
-            />
+        <div className="space-y-4">
+            {/* Top action bar */}
+            <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-gray-900">
+                    Sweets
+                </h2>
 
+                <button
+                    onClick={() => setShowCreateModal(true)}
+                    className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition"
+                >
+                    + Add Sweet
+                </button>
+            </div>
+
+            {/* Table */}
+            <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+                <SweetsTable
+                    sweets={sweets}
+                    page={page}
+                    totalPages={totalPages}
+                    onPageChange={setPage}
+                    onRestockClick={setSweetToRestock}
+                    onDeleteClick={setSweetToDelete}
+                    onEditClick={setSweetToEdit}
+                />
+            </div>
+
+            {/* Modals */}
             {sweetToRestock && (
                 <QuantityModal
                     title={`Restock ${sweetToRestock.name}`}
@@ -193,6 +245,14 @@ export default function AdminSweets() {
                     onConfirm={handleEditSweet}
                 />
             )}
-        </>
+
+            {showCreateModal && (
+                <CreateSweetModal
+                    onClose={() => setShowCreateModal(false)}
+                    onConfirm={handleCreateSweet}
+                />
+            )}
+        </div>
     );
+
 }

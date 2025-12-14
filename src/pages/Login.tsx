@@ -20,10 +20,8 @@ export default function Login() {
     try {
       const res = await loginUser({ email, password });
 
-      // Save auth state
       login(res.token, res.user);
 
-      // Redirect based on role
       if (res.user.role === "ADMIN") {
         navigate("/admin");
       } else {
@@ -37,53 +35,65 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-950">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm space-y-4 rounded-xl bg-zinc-900 p-6"
+        className="w-full max-w-sm space-y-5 rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
       >
-        <h1 className="text-2xl font-bold text-center text-pink-500">Login</h1>
+        <div className="text-center">
+          <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
+            Sign in
+          </h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Welcome back to Sweet Shop
+          </p>
+        </div>
 
-        {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+        {error && (
+          <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-600 text-center">
+            {error}
+          </p>
+        )}
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="w-full rounded bg-zinc-800 px-3 py-2 text-white outline-none focus:ring-2 focus:ring-pink-500"
-        />
+        <div className="space-y-3">
+          <input
+            type="email"
+            placeholder="Email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="w-full rounded bg-zinc-800 px-3 py-2 text-white outline-none focus:ring-2 focus:ring-pink-500"
-        />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          />
+        </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded bg-pink-600 py-2 font-semibold text-white hover:bg-pink-700 disabled:opacity-50"
+          className="w-full rounded-md bg-indigo-600 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50 transition"
         >
-          {loading ? "Logging in..." : "Login"}
+          {loading ? "Signing in..." : "Sign in"}
         </button>
-        {/* not registered? */}
-        <p className="text-sm text-center text-white">
-          Don't have an account?{" "}
+
+        <p className="text-sm text-center text-gray-600">
+          Don&apos;t have an account?{" "}
           <button
             type="button"
             onClick={() => navigate("/register")}
-            className="text-pink-500 hover:underline"
+            className="font-medium text-indigo-600 hover:underline"
           >
             Register
           </button>
         </p>
       </form>
-      
     </div>
   );
 }
