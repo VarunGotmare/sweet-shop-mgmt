@@ -47,3 +47,14 @@ exports.restockSweet = async (req, res) => {
             .json({ message: err.message || 'Server error' });      
     }
 }
+
+exports.searchSweets = async (req, res) => {
+    try{
+        const sweets = await sweetsService.searchSweets(req.query);
+        return res.status(200).json(sweets);
+    }catch (err){
+        return res
+            .status(500)
+            .json({ message: 'Server error' });
+    }
+}

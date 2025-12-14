@@ -61,7 +61,7 @@ exports.restockSweet = async (sweetId, quantity) => {
     const sweet = await prisma.sweet.findUnique({
         where: { id: sweetId },
     });
-    if(!sweet) {
+    if (!sweet) {
         const error = new Error('Sweet not found');
         error.statusCode = 404;
         throw error;
@@ -72,9 +72,30 @@ exports.restockSweet = async (sweetId, quantity) => {
             quantity: {
                 increment: quantity,
             }
-    },
+        },
     });
     return {
         updatedQuantity: updatedSweet.quantity,
     };
 }
+
+exports.searchSweets = async (filters) => {
+    const { name, category, minPrice, maxPrice } = filters;
+    const where = {};
+    if (name) {
+        where.name = {
+            contains: name,
+            mode: 'insensitive',
+        };
+    };
+    if (category) {
+        where.category = category;
+    };
+    if (minPrice || maxPrice) {
+        where.price = {};
+        if (minPrice) where.price.gte = Number(minPrice);
+        if (maxPrice) where.price.lte = Number(maxPrice);
+    }
+
+    return prisma.sweet.findMany({ where });
+};
