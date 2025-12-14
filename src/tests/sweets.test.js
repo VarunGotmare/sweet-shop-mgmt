@@ -151,7 +151,7 @@ describe('Sweets: Create', () => {
     });
 
     it('should search sweets by name and price range', async () => {
-        //register & login admin
+        // register & login admin
         await request(app)
             .post('/api/auth/register')
             .send({
@@ -169,7 +169,7 @@ describe('Sweets: Create', () => {
 
         const token = loginRes.body.token;
 
-        //create sweets
+        // create sweets
         await request(app)
             .post('/api/sweets')
             .set('Authorization', `Bearer ${token}`)
@@ -190,15 +190,24 @@ describe('Sweets: Create', () => {
                 quantity: 30,
             });
 
-        //search sweets
+        // search sweets
         const res = await request(app)
-            .get('/api/sweets/search?name=choco&minPrice=30&maxPrice=60')
+            .get('/api/sweets/search?name=choco&minPrice=30&maxPrice=60&page=1&limit=10')
             .set('Authorization', `Bearer ${token}`);
 
         expect(res.statusCode).toBe(200);
-        expect(res.body.length).toBe(1);
-        expect(res.body[0].name).toBe('Chocolate Bar');
+
+        // NEW ASSERTIONS
+        expect(res.body).toHaveProperty('data');
+        expect(res.body).toHaveProperty('pagination');
+
+        expect(res.body.data.length).toBe(1);
+        expect(res.body.data[0].name).toBe('Chocolate Bar');
+
+        expect(res.body.pagination.total).toBe(1);
+        expect(res.body.pagination.page).toBe(1);
     });
+
 
     it('should allow admin to update a sweet', async () => {
         //register admin

@@ -13,7 +13,7 @@ exports.createSweet = async (req, res) => {
 
 exports.getAllSweets = async (req, res) => {
     try {
-        const sweets = await sweetsService.getAllSweets();
+        const sweets = await sweetsService.getAllSweets(req.query);
         return res.status(200).json(sweets);
     } catch (err) {
         return res
