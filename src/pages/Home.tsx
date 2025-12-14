@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { getAllSweets } from "../api/sweets.api";
+import { getAllSweets, searchSweets } from "../api/sweets.api";
 import type { Sweet } from "../api/sweets.api";
 import { useAuth } from "../auth/useAuth";
 import { useNavigate } from "react-router-dom";
 
-import SweetGrid from "../components/SweetGrid";
+import SweetsTable from "../components/SweetTable";
+import SweetsSearch from "../components/SweetSearch";
 
 const LIMIT = 10;
 
@@ -12,6 +13,9 @@ export default function Home() {
   const [sweets, setSweets] = useState<Sweet[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [searchName, setSearchName] = useState("");
+  const [searchCategory, setSearchCategory] = useState("");
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -21,12 +25,23 @@ export default function Home() {
 
   useEffect(() => {
     fetchSweets(page);
-  }, [page]);
+  }, [page, searchName, searchCategory]);
 
   const fetchSweets = async (pageNumber: number) => {
     try {
       setLoading(true);
-      const res = await getAllSweets(pageNumber, LIMIT);
+
+      const hasSearch =
+        searchName.trim() !== "" || searchCategory.trim() !== "";
+
+      const res = hasSearch
+        ? await searchSweets({
+          name: searchName || undefined,
+          category: searchCategory || undefined,
+          page: pageNumber,
+          limit: LIMIT,
+        })
+        : await getAllSweets(pageNumber, LIMIT);
 
       setSweets(res.data);
       setTotalPages(res.pagination.totalPages);
@@ -37,6 +52,11 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    setPage(1);
+  }, [searchName, searchCategory]);
+
+
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -46,9 +66,7 @@ export default function Home() {
     <div className="min-h-screen bg-zinc-950 p-6 text-white">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-pink-500">
-          Available Sweets
-        </h1>
+        <h1 className="text-3xl font-bold text-pink-500">Available Sweets</h1>
 
         <div className="flex items-center gap-4">
           <span className="text-sm text-zinc-400">{user?.name}</span>
@@ -60,6 +78,19 @@ export default function Home() {
           </button>
         </div>
       </div>
+
+      {/* Search */}
+      <SweetsSearch
+        name={searchName}
+        category={searchCategory}
+        onNameChange={setSearchName}
+        onCategoryChange={setSearchCategory}
+        onClear={() => {
+          setSearchName("");
+          setSearchCategory("");
+        }}
+      />
+
 
       {/* Content */}
       {loading && (
@@ -82,30 +113,12 @@ export default function Home() {
 
       {!loading && !error && sweets.length > 0 && (
         <>
-          <SweetGrid sweets={sweets} />
-
-          {/* Pagination */}
-          <div className="mt-6 flex items-center justify-center gap-4">
-            <button
-              disabled={page === 1}
-              onClick={() => setPage((p) => p - 1)}
-              className="rounded border border-zinc-700 px-4 py-2 text-sm disabled:opacity-50"
-            >
-              Prev
-            </button>
-
-            <span className="text-sm text-zinc-400">
-              Page {page} of {totalPages}
-            </span>
-
-            <button
-              disabled={page === totalPages}
-              onClick={() => setPage((p) => p + 1)}
-              className="rounded border border-zinc-700 px-4 py-2 text-sm disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
+          <SweetsTable
+            sweets={sweets}
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
         </>
       )}
     </div>
