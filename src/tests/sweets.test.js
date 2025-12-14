@@ -105,5 +105,50 @@ describe('Sweets: Create', () => {
         expect(res.body.remainingQuantity).toBe(15);
     });
 
+    it('should allow admin to restock a sweet and increase quantity', async () => {
+        //register admin
+        await request(app)
+            .post('/api/auth/register')
+            .send({
+                name: 'Admin',
+                email: process.env.ADMIN_EMAILS.split(',')[0],
+                password: 'password123',
+            });
+
+        //login admin
+        const loginRes = await request(app)
+            .post('/api/auth/login')
+            .send({
+                email: process.env.ADMIN_EMAILS.split(',')[0],
+                password: 'password123',
+            });
+
+        const token = loginRes.body.token;
+
+        //create sweet
+        const sweetRes = await request(app)
+            .post('/api/sweets')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                name: 'Barfi',
+                category: 'Indian',
+                price: 15,
+                quantity: 10,
+            });
+
+        const sweetId = sweetRes.body.id;
+
+        //restock sweet
+        const res = await request(app)
+            .post(`/api/sweets/${sweetId}/restock`)
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                quantity: 20,
+            });
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.updatedQuantity).toBe(30);
+    });
+
 
 });

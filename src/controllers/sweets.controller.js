@@ -33,3 +33,17 @@ exports.purchaseSweet = async (req, res) => {
         return res.status(err.statusCode || 500).json({ message: err.message || 'Server error' });      
     }
 }
+
+exports.restockSweet = async (req, res) => {
+    try{
+        const result = await sweetsService.restockSweet(
+            req.params.id,
+            req.body.quantity   
+        );
+        return res.status(200).json(result);
+    }catch (err){
+        return res
+            .status(err.statusCode || 500)
+            .json({ message: err.message || 'Server error' });      
+    }
+}

@@ -19,6 +19,11 @@ exports.getAllSweets = async () => {
 
 exports.purchaseSweet = async (sweetId, quantity) => {
     quantity = parseInt(quantity);
+    if (!Number.isInteger(quantity) || quantity <= 0) {
+        const error = new Error('Invalid quantity');
+        error.statusCode = 400;
+        throw error;
+    }
     const sweet = await prisma.sweet.findUnique({
         where: { id: sweetId },
     });
@@ -45,3 +50,31 @@ exports.purchaseSweet = async (sweetId, quantity) => {
     };
 
 };
+
+exports.restockSweet = async (sweetId, quantity) => {
+    quantity = parseInt(quantity);
+    if (!Number.isInteger(quantity) || quantity <= 0) {
+        const error = new Error('Invalid quantity');
+        error.statusCode = 400;
+        throw error;
+    }
+    const sweet = await prisma.sweet.findUnique({
+        where: { id: sweetId },
+    });
+    if(!sweet) {
+        const error = new Error('Sweet not found');
+        error.statusCode = 404;
+        throw error;
+    }
+    const updatedSweet = await prisma.sweet.update({
+        where: { id: sweetId },
+        data: {
+            quantity: {
+                increment: quantity,
+            }
+    },
+    });
+    return {
+        updatedQuantity: updatedSweet.quantity,
+    };
+}
