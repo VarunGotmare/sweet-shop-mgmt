@@ -26,7 +26,8 @@ exports.purchaseSweet = async (req, res) => {
     try {
         const result = await sweetsService.purchaseSweet(
             req.params.id,
-            req.body.quantity
+            req.body.quantity,
+            req.user.id
         );
         return res.status(200).json(result);
     } catch (err) {
@@ -38,7 +39,8 @@ exports.restockSweet = async (req, res) => {
     try {
         const result = await sweetsService.restockSweet(
             req.params.id,
-            req.body.quantity
+            req.body.quantity,
+            req.user.id
         );
         return res.status(200).json(result);
     } catch (err) {

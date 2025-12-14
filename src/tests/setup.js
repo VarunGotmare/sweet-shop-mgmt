@@ -2,11 +2,14 @@ require('dotenv').config();
 const { prisma, pool } = require('../lib/prisma');
 
 beforeEach(async () => {
-    //clear users before testing
-    await prisma.purchase.deleteMany();
-    await prisma.restock.deleteMany();
-    await prisma.sweet.deleteMany();
-    await prisma.user.deleteMany();
+    await prisma.$executeRawUnsafe(`
+        TRUNCATE TABLE
+            "Purchase",
+            "Restock",
+            "Sweet",
+            "User"
+        RESTART IDENTITY CASCADE;
+    `);
 });
 
 afterAll(async () => {
