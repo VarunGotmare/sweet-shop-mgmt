@@ -99,3 +99,48 @@ exports.searchSweets = async (filters) => {
 
     return prisma.sweet.findMany({ where });
 };
+
+exports.updateSweet = async (sweetId, data) => {
+    const sweet = await prisma.sweet.findUnique({
+        where: { id: sweetId },
+    });
+
+    if (!sweet) {
+        const error = new Error('Sweet not found');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    const allowedFields = ['name', 'category', 'price', 'quantity'];
+    const updateData = {};
+
+    for (const key of allowedFields) {
+        if (data[key] !== undefined) {
+            updateData[key] = key === 'price'
+                ? Number(data[key])
+                : data[key];
+        }
+    }
+
+    return prisma.sweet.update({
+        where: { id: sweetId },
+        data: updateData,
+    });
+};
+
+exports.deleteSweet = async (sweetId) => {
+    const sweet = await prisma.sweet.findUnique({
+        where: { id: sweetId },
+    });
+
+    if (!sweet) {
+        const error = new Error('Sweet not found');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    await prisma.sweet.delete({
+        where: { id: sweetId },
+    });
+};
+

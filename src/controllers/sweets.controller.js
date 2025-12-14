@@ -23,38 +23,69 @@ exports.getAllSweets = async (req, res) => {
 };
 
 exports.purchaseSweet = async (req, res) => {
-    try{
+    try {
         const result = await sweetsService.purchaseSweet(
             req.params.id,
-            req.body.quantity   
+            req.body.quantity
         );
         return res.status(200).json(result);
-    }catch (err){
-        return res.status(err.statusCode || 500).json({ message: err.message || 'Server error' });      
+    } catch (err) {
+        return res.status(err.statusCode || 500).json({ message: err.message || 'Server error' });
     }
 }
 
 exports.restockSweet = async (req, res) => {
-    try{
+    try {
         const result = await sweetsService.restockSweet(
             req.params.id,
-            req.body.quantity   
+            req.body.quantity
         );
         return res.status(200).json(result);
-    }catch (err){
+    } catch (err) {
         return res
             .status(err.statusCode || 500)
-            .json({ message: err.message || 'Server error' });      
+            .json({ message: err.message || 'Server error' });
     }
 }
 
 exports.searchSweets = async (req, res) => {
-    try{
+    try {
         const sweets = await sweetsService.searchSweets(req.query);
         return res.status(200).json(sweets);
-    }catch (err){
+    } catch (err) {
         return res
             .status(500)
             .json({ message: 'Server error' });
     }
 }
+
+exports.updateSweet = async (req, res) => {
+    try {
+        const updated = await sweetsService.updateSweet(
+            req.params.id,
+            req.body
+        );
+
+        return res.status(200).json(updated);
+    } catch (err) {
+        console.error(err);
+        return res
+            .status(err.statusCode || 500)
+            .json({ message: err.message || 'Server error' });
+    }
+};
+
+exports.deleteSweet = async (req, res) => {
+    try {
+        await sweetsService.deleteSweet(req.params.id);
+        return res.status(200).json({
+            message: 'Sweet deleted successfully',
+        });
+    } catch (err) {
+        console.error(err);
+        return res
+            .status(err.statusCode || 500)
+            .json({ message: err.message || 'Server error' });
+    }
+};
+

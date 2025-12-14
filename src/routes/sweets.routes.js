@@ -7,6 +7,8 @@ const {
   purchaseSweet,
   restockSweet,
   searchSweets,
+  updateSweet,
+  deleteSweet
 } = require('../controllers/sweets.controller');
 
 const router = express.Router();
@@ -17,6 +19,8 @@ router.get('/', requireAuth, getAllSweets);
 router.post('/:id/purchase', requireAuth, purchaseSweet);
 router.post('/:id/restock', requireAuth, requireAdmin, restockSweet);
 router.get('/search', requireAuth,searchSweets);
+router.put('/:id', requireAuth, requireAdmin, updateSweet);
+router.delete('/:id', requireAuth, requireAdmin, deleteSweet);
 
 
 module.exports = router;

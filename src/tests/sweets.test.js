@@ -200,6 +200,94 @@ describe('Sweets: Create', () => {
         expect(res.body[0].name).toBe('Chocolate Bar');
     });
 
+    it('should allow admin to update a sweet', async () => {
+        //register admin
+        await request(app)
+            .post('/api/auth/register')
+            .send({
+                name: 'Admin',
+                email: process.env.ADMIN_EMAILS.split(',')[0],
+                password: 'password123',
+            });
+
+        //login admin
+        const loginRes = await request(app)
+            .post('/api/auth/login')
+            .send({
+                email: process.env.ADMIN_EMAILS.split(',')[0],
+                password: 'password123',
+            });
+
+        const token = loginRes.body.token;
+
+        //create sweet
+        const sweetRes = await request(app)
+            .post('/api/sweets')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                name: 'Peda',
+                category: 'Indian',
+                price: 20,
+                quantity: 10,
+            });
+
+        const sweetId = sweetRes.body.id;
+
+        //update sweet
+        const res = await request(app)
+            .put(`/api/sweets/${sweetId}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                price: 25,
+                quantity: 30,
+            });
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.price).toBe('25');
+        expect(res.body.quantity).toBe(30);
+    });
+
+    it('should allow admin to delete a sweet', async () => {
+        //register admin
+        await request(app)
+            .post('/api/auth/register')
+            .send({
+                name: 'Admin',
+                email: process.env.ADMIN_EMAILS.split(',')[0],
+                password: 'password123',
+            });
+
+        //login admin
+        const loginRes = await request(app)
+            .post('/api/auth/login')
+            .send({
+                email: process.env.ADMIN_EMAILS.split(',')[0],
+                password: 'password123',
+            });
+
+        const token = loginRes.body.token;
+
+        //create sweet
+        const sweetRes = await request(app)
+            .post('/api/sweets')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+                name: 'Rasgulla',
+                category: 'Indian',
+                price: 30,
+                quantity: 15,
+            });
+
+        const sweetId = sweetRes.body.id;
+
+        //delete sweet
+        const res = await request(app)
+            .delete(`/api/sweets/${sweetId}`)
+            .set('Authorization', `Bearer ${token}`);
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.message).toBe('Sweet deleted successfully');
+    });
 
 
 });
