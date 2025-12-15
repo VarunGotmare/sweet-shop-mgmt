@@ -1,73 +1,91 @@
-# React + TypeScript + Vite
+# 🍬 Sweet Shop Management System – Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A role-aware **React single-page application** for managing a sweet shop’s inventory and purchases.  
+Built with **React + Vite + Tailwind CSS**, integrated with a JWT-based backend.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ‣ Features
 
-## React Compiler
+- JWT Authentication (Login & Register)
+- Role-based access (`USER`, `ADMIN`)
+- Protected & public routes
+- Single-page dashboard UX
+- Sweets displayed in a **row-based list**
+- Purchase action (stock-aware)
+- Admin-only dashboard
+- Automatic logout on unauthorized access
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## ‣ Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React (Hooks)
+- Vite
+- TypeScript
+- Tailwind CSS
+- Axios
+- React Router v6
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## ‣ Folder Structure
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```txt
+src/
+├── api/
+│   ├── axios.ts          # Axios instance with interceptors
+│   ├── auth.api.ts       # Auth API calls
+│   └── sweets.api.ts     # Sweets & inventory API calls
+│
+├── auth/
+│   ├── AuthContext.tsx   # Auth state management
+│   ├── useAuth.ts
+│   ├── ProtectedRoute.tsx
+│   ├── AdminRoute.tsx
+│   └── PublicRoute.tsx
+│
+├── components/
+│   └── SweetList.tsx     # Row-based sweets list UI
+│
+├── pages/
+│   ├── Login.tsx
+│   ├── Register.tsx
+│   ├── Home.tsx
+│   └── Admin.tsx
+│
+├── App.tsx
+├── main.tsx
+└── index.css
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## ‣ Authentication Flow
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+  1. User logs in / registers
+  
+  2. Backend returns JWT + user info
+  
+  3. Token stored in localStorage
+  
+  4. JWT attached to all API requests
+  
+  5. UI rendered based on user role
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## ‣ Environment Variables
+
+```env
+VITE_API_URL=https://<backend-hosted-url>
+```
+
+## ‣ Development
+
+```
+npm install
+npm run dev
+```
+
+## ‣ Build
+
+```
+npm run build
 ```
