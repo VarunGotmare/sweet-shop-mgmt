@@ -5,6 +5,7 @@ const {prisma} = require('./lib/prisma');
 
 const authRoutes = require('./routes/auth.routes');
 const sweetsRoutes = require('./routes/sweets.routes');
+const logsRoutes = require('./routes/logs.routes');
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.get('/health', async (req, res) => {
 //my api routes
 app.use('/api/auth', authRoutes);
 app.use('/api/sweets', sweetsRoutes);
+app.use('/api/logs', logsRoutes);
 
 
 
