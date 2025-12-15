@@ -73,6 +73,10 @@ Built with a production-style architecture using **Node.js, Express, Prisma, and
 
 > `price` is stored as a `Decimal` and returned as a string to avoid floating-point precision issues.
 
+<img width="667" height="735" alt="Screenshot 2025-12-15 102107" src="https://github.com/user-attachments/assets/9d75a08a-fe88-4285-a886-c62def6409fd" />
+
+
+
 ---
 
 ## ‣ Admin Accounts
