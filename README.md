@@ -4,4 +4,6 @@
 
 ### Documentation
 
-Frontend - (frontend/README.md)
+[Frontend](./frontend/README.md) - ./frontend/README.md
+
+[Backend](./backend/README.md) - ./backend/README.md
