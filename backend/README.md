@@ -5,7 +5,7 @@ Built with a production-style architecture using **Node.js, Express, Prisma, and
 
 ---
 
-## ✨ Features
+## ‣ Features
 
 ### Authentication & Authorization
 - User registration and login using JWT
@@ -13,7 +13,7 @@ Built with a production-style architecture using **Node.js, Express, Prisma, and
 - Secure password hashing with bcrypt
 - Admin-only routes protected via middleware
 
-### 📌 API Overview
+### ‣ API Overview
 ### Authentication
 
 - `POST /api/auth/register`
@@ -60,7 +60,7 @@ Built with a production-style architecture using **Node.js, Express, Prisma, and
 
 ---
 
-## 📂 Database Schema (High Level)
+## ‣ Database Schema (High Level)
 
 - `User`
   - id, name, email, password, role
@@ -75,7 +75,7 @@ Built with a production-style architecture using **Node.js, Express, Prisma, and
 
 ---
 
-## 🔐 Admin Accounts
+## ‣ Admin Accounts
 
 Admin accounts are **environment-based**.
 
@@ -88,26 +88,26 @@ Admin accounts are **environment-based**.
 ADMIN_EMAILS=admin@example.com,owner@example.com
 ```
 
-## 🚀 Getting Started
+## ‣ Getting Started
 
 Follow the steps below to run the backend locally.
 
 ---
 
-### 1️⃣ Clone the Repository
+### ‣ Clone the Repository
 
 ```bash
 git clone https://github.com/VarunGotmare/sweet-mgmt-backend.git
 cd sweet-shop-backend
 ```
 
-### 2️⃣ Install Dependencies
+### ‣ Install Dependencies
 
 ```bash
 npm install
 ```
 
-### 3️⃣ Environment Variables
+### ‣ Environment Variables
 
 ```bash
 DATABASE_URL=your_supabase_postgres_connection_url
@@ -115,14 +115,14 @@ JWT_SECRET=your_jwt_secret_key
 ADMIN_EMAILS=admin@example.com,owner@example.com
 ```
 
-### 4️⃣ Prisma Setup
+### ‣ Prisma Setup
 
 ```bash
 npx prisma generate
 npx prisma migrate dev
 ```
 
-### 5️⃣ Start the Server
+### ‣ Start the Server
 
 ```bash
 npm run dev
