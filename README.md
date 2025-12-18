@@ -14,7 +14,7 @@
 ## Register Page
 <img width="2387" height="1279" alt="image" src="https://github.com/user-attachments/assets/5cef4db0-e9d0-45c7-96bc-ab09c00ec4d5" />
 
-## Admin Daashboard
+## Admin Dashboard
 <img width="2387" height="1279" alt="image" src="https://github.com/user-attachments/assets/5b41e752-d246-40b6-8896-03182f34a0a1" />
 
 ## Admin Logs
